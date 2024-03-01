@@ -1,0 +1,42 @@
+ # Copyright (c) 2022, salesforce.com, inc.
+ # All rights reserved.
+ # SPDX-License-Identifier: BSD-3-Clause
+ # For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+
+# Overall Accuracy is: 51.88 (result different from BLIP-2 paper due to different implementation and transformers version)
+
+model:
+  arch: blip2_opt
+  model_type: pretrain_opt2.7b
+  use_grad_checkpoint: False
+
+datasets:
+  msvd_qa: # name of the dataset builder
+    type: eval
+    vis_processor:
+        eval:
+          name: "blip_video_eval"
+          n_frms: 16
+          image_size: 224
+    text_processor:
+        eval:
+          name: "blip_question"
+
+run:
+  task: multimodal_classification
+  # optimization-specific
+  batch_size_train: 24
+  batch_size_eval: 64
+  num_workers: 2
+
+  seed: 42
+  output_dir: "output/ALPRO/msvd_qa"
+
+  evaluate: True
+  test_splits: ["test"]
+
+  # distribution-specific
+  device: "cuda"
+  world_size: 1
+  dist_url: "env://"
+  distributed: True
