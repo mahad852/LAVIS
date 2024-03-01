@@ -35,7 +35,7 @@ run:
   # optimizer
   batch_size_train: 32
   batch_size_eval: 16
-  num_workers: 2
+  num_workers: 1
 
   max_len: 30
   min_len: 8
