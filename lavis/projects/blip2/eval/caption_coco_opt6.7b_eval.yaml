@@ -33,8 +33,8 @@ datasets:
 run:
   task: captioning
   # optimizer
-  batch_size_train: 1
-  batch_size_eval: 1
+  batch_size_train: 32
+  batch_size_eval: 16
   num_workers: 1
 
   max_len: 30
