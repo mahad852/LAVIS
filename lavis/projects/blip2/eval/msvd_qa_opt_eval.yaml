@@ -12,15 +12,14 @@ model:
 
 datasets:
   msvd_qa: # name of the dataset builder
-    type: eval
     vis_processor:
         eval:
           name: "blip_video_eval"
           n_frms: 16
-          image_size: 224
+          image_size: 364
     text_processor:
         eval:
-          name: "blip_question"
+          name: "blip_caption"
 
 run:
   task: multimodal_classification
@@ -30,7 +29,7 @@ run:
   num_workers: 2
 
   seed: 42
-  output_dir: "output/ALPRO/msvd_qa"
+  output_dir: "output/BLIP2/msvd_qa"
 
   evaluate: True
   test_splits: ["test"]
