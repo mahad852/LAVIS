@@ -46,8 +46,9 @@ class WGVRetrievalEvalDataset(BaseDataset, __DisplMixin):
 
         for i, im_name in enumerate(os.listdir(vis_root)):
             self.annotation.append({'image' : im_name, 'instance_id' : str(i), 'caption' : []})
-
-            texts = ['a photo i took in {}.', 'a photo showing the country of {}.']
+            city = im_name.split('_')[0]
+            country = self.city_info[im_name.split('_')[0]]['country']
+            texts = [f'a photo i took in {city}.', f'a photo showing the country of {country}.']
 
             self.img2txt[i] = []
 
