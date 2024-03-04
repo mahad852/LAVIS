@@ -16,6 +16,9 @@ class __DisplMixin:
                 visual_key: sample[visual_key],
             }
         )
+    
+def clean_location_text(text: str) -> str:
+    return ' '.join(text.split('_'))
 
 class WGVRetrievalEvalDataset(BaseDataset, __DisplMixin):
     def __init__(self, vis_processor, text_processor, vis_root, ann_paths):
@@ -48,9 +51,12 @@ class WGVRetrievalEvalDataset(BaseDataset, __DisplMixin):
 
         for i, im_name in enumerate(image_files):
             self.annotation.append({'image' : im_name, 'instance_id' : str(i), 'caption' : []})
-            city = im_name.split('_')[0]
-            country = self.city_info[im_name.split('_')[0]]['country']
-            texts = [f'a photo i took in {city}.', f'a photo showing the country of {country}.']
+            
+            city = '_'.join(im_name.split('_')[0:-2])
+            country = self.city_info[city]['country']
+            
+            texts = [f'a photo i took in {clean_location_text(city)}.', 
+                     f'a photo showing the country of {clean_location_text(country)}.']
 
             self.img2txt[i] = []
 
