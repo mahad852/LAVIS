@@ -44,7 +44,9 @@ class WGVRetrievalEvalDataset(BaseDataset, __DisplMixin):
         self.vis_processor = vis_processor
         self.text_processor = text_processor
 
-        for i, im_name in enumerate(os.listdir(vis_root)):
+        image_files = os.listdir(self.vis_root)[:4000]
+
+        for i, im_name in enumerate(image_files):
             self.annotation.append({'image' : im_name, 'instance_id' : str(i), 'caption' : []})
             city = im_name.split('_')[0]
             country = self.city_info[im_name.split('_')[0]]['country']
@@ -99,10 +101,13 @@ class WGVRetrievalDataset(BaseDataset, __DisplMixin):
         self.vis_processor = vis_processor
         self.text_processor = text_processor
 
-        for i, im_name in enumerate(os.listdir(vis_root)):
-            self.annotation.append({'image' : im_name, 'instance_id' : str(i), 'caption' : []})
+        image_files = os.listdir(self.vis_root)[:5000]
 
-            texts = ['a photo i took in {}.', 'a photo showing the country of {}.']
+        for i, im_name in enumerate(image_files):
+            self.annotation.append({'image' : im_name, 'instance_id' : str(i), 'caption' : []})
+            city = im_name.split('_')[0]
+            country = self.city_info[im_name.split('_')[0]]['country']
+            texts = [f'a photo i took in {city}.', f'a photo showing the country of {country}.']
 
             self.img2txt[i] = []
 

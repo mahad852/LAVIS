@@ -11,12 +11,12 @@ datasets:
     build_info:
       # Be careful not to append minus sign (-) before split to avoid itemizing
       annotations:
-        train:
-          url: https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_train.json
-          storage: WGV/labels_list.csv
-        val:
-          url: https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_val.json
-          storage: WGV/labels_list.csv
+        # train:
+        #   url: https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_train.json
+        #   storage: WGV/labels_list.csv
+        # val:
+        #   url: https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_val.json
+        #   storage: WGV/labels_list.csv
         test:
           url: https://storage.googleapis.com/sfr-vision-language-research/datasets/coco_karpathy_test.json
           storage: WGV/labels_list.csv
