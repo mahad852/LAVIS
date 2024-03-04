@@ -13,6 +13,11 @@ from lavis.datasets.datasets.retrieval_datasets import (
     VideoRetrievalEvalDataset,
 )
 
+from lavis.datasets.datasets.wgv_vqa_datasets import (
+    WGVRetrievalEvalDataset,
+    WGVRetrievalDataset
+)
+
 from lavis.common.registry import registry
 
 
@@ -46,3 +51,10 @@ class Flickr30kBuilder(BaseDatasetBuilder):
     eval_dataset_cls = RetrievalEvalDataset
 
     DATASET_CONFIG_DICT = {"default": "configs/datasets/flickr30k/defaults.yaml"}
+
+@registry.register_builder("wgv_retrieval")
+class WGVRetrievalBuilder(BaseDatasetBuilder):
+    train_dataset_cls = WGVRetrievalDataset
+    eval_dataset_cls = WGVRetrievalEvalDataset
+
+    DATASET_CONFIG_DICT = {"default": "configs/datasets/wgv/defaults_ret.yaml"}

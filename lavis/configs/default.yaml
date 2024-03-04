@@ -7,4 +7,4 @@ env:
   # For default users
   # cache_root: "cache"
   # For internal use with persistent storage
-  cache_root: "/home/cap6412.student3/datasets"
+  cache_root: "/datasets"
