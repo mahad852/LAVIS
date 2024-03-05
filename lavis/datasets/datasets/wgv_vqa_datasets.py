@@ -76,6 +76,9 @@ class WGVRetrievalEvalDataset(BaseDataset, __DisplMixin):
                 
             self.image.append(im_name)
 
+        self.text = self.text[:len(set(self.image)) * 2]
+
+        print('============= Dataset lens:', len(self.text, len(self.img2txt.keys())), len(self.txt2img.keys()))
 
     def __getitem__(self, index):
 
