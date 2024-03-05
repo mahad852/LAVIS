@@ -26,7 +26,7 @@ datasets:
 #         images:
 #             storage: '/export/share/datasets/vision/coco/images/'
 run:
-  task: retrieval
+  task: wgv_retrieval
 
   # dataloading
   num_workers: 1
