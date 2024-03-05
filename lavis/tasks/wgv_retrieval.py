@@ -13,11 +13,42 @@ import numpy as np
 import torch
 from lavis.common.dist_utils import is_main_process
 from lavis.common.registry import registry
-from lavis.tasks.retrieval import RetrievalTask
+from lavis.tasks.base_task import BaseTask
 
 
 @registry.register_task("wgv_retrieval")
-class WGVRetrievalTask(RetrievalTask):
+class WGVRetrievalTask(BaseTask):
+    def __init__(self, cfg):
+        super().__init__()
+
+        self.cfg = cfg
+
+    @classmethod
+    def setup_task(cls, cfg):
+        run_cfg = cfg.run_cfg
+
+        return cls(cfg=run_cfg)
+
+    def evaluation(self, model, data_loader, **kwargs):
+        # score_i2t, score_t2i = model.compute_sim_matrix(model, data_loader)
+        score_i2t, score_t2i = model.compute_sim_matrix(data_loader, task_cfg=self.cfg)
+
+        if is_main_process():
+            eval_result = self._report_metrics(
+                score_i2t,
+                score_t2i,
+                data_loader.dataset.txt2img,
+                data_loader.dataset.img2txt,
+            )
+            logging.info(eval_result)
+        else:
+            eval_result = None
+
+        return eval_result
+
+    def after_evaluation(self, val_result, **kwargs):
+        return val_result
+    
     @staticmethod
     @torch.no_grad()
     def _report_metrics(scores_i2t, scores_t2i, txt2img, img2txt):
