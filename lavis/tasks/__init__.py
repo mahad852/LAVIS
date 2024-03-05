@@ -42,4 +42,5 @@ __all__ = [
     # "VisualEntailmentTask",
     "ImageTextPretrainTask",
     "DialogueTask",
+    "WGVRetrievalTask"
 ]
