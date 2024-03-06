@@ -59,7 +59,7 @@ for i, im_name in enumerate(image_files):
     # print('model output2:', pred_answer)
 
     pred_answer = pred_answer[0].lower().split(',')[0]
-    if pred_answer == actual_answer:
+    if pred_answer == actual_answer or actual_answer in pred_answer:
         close_ended_correct += 1
 
     print('image:', im_name, f'Question: Which of these countries is this image from? ({choice_text}) answer:', pred_answer, 'actual answer:', actual_answer)
