@@ -9,7 +9,7 @@ device = torch.device("cuda")
 root_image_dir = '/datasets/WGV/val'
 labels_path = '/datasets/WGV/labels_list.csv'
 
-image_files = os.listdir('/datasets/WGV/val')
+image_files = os.listdir('/datasets/WGV/val')[:1500]
 
 
 
