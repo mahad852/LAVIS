@@ -34,15 +34,15 @@ for i, im_name in enumerate(image_files):
 
     pred_answer = model.generate({"image": image, "prompt": "Question: which city is this image from? Answer:"})
     actual_answer = ' '.join(im_name.split('_')[0:-2]).lower()
-
-    if pred_answer.lower() == actual_answer:
+    print(pred_answer)
+    if pred_answer[0].lower() == actual_answer:
         open_ended_correct += 1
 
     print('image:', im_name, 'question: which city is this image from? answer:', pred_answer, 'actual answer:', actual_answer)
     
     actual_answer = ' '.join(city_info['_'.join(im_name.split('_')[0:-2])].split('_')).lower()
     pred_answer = model.generate({"image": image, "prompt": f"Question: Which of these countries is this image from? (united states/united kingdom/india/{actual_answer}) Answer:"})
-    if pred_answer.lower() == actual_answer:
+    if pred_answer[0].lower() == actual_answer:
         close_ended_correct += 1
 
     print('image:', im_name, f'Question: Which of these countries is this image from? (united states/united kingdom/india/{actual_answer}) answer:', pred_answer, 'actual answer:', actual_answer)
