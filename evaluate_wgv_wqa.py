@@ -25,8 +25,12 @@ with open(labels_path, 'r') as f:
         city_info[info[0]] = {'state' : info[1], 'country' : info[2], 'continent': info[3]}
 
 
+
 open_ended_correct = 0
 close_ended_correct = 0
+
+popular_countries = ['united states', 'united kingdom', 'india']
+choice_text = '/'.join(popular_countries)
 
 for i, im_name in enumerate(image_files):
     raw_image = Image.open(os.path.join(root_image_dir, im_name)).convert("RGB")
@@ -35,7 +39,8 @@ for i, im_name in enumerate(image_files):
     pred_answer = model.generate({"image": image, 
                                   "prompt": "Question: which city is this image from? Answer:"}, use_nucleus_sampling=True, repetition_penalty=1.5)
     actual_answer = ' '.join(im_name.split('_')[0:-2]).lower()
-    print('model output1:', pred_answer)
+    # print('model output1:', pred_answer)
+
     pred_answer = pred_answer[0].lower().split(',')[0]
 
     if pred_answer == actual_answer:
@@ -44,15 +49,20 @@ for i, im_name in enumerate(image_files):
     print('image:', im_name, 'question: which city is this image from? answer:', pred_answer, 'actual answer:', actual_answer)
     
     actual_answer = ' '.join(city_info['_'.join(im_name.split('_')[0:-2])]['country'].split('_')).lower()
+    
+    choice_text = choice_text if actual_answer in popular_countries else choice_text + '/' + actual_answer
+    
     pred_answer = model.generate({"image": image, 
-                                  "prompt": f"Question: Which of these countries is this image from? (united states/united kingdom/india/{actual_answer}) Answer:"},
+                                  "prompt": f"Question: Which of these countries is this image from? ({choice_text}) Answer:"},
                                   use_nucleus_sampling=True, repetition_penalty=1.5)
-    print('model output2:', pred_answer)
+    
+    # print('model output2:', pred_answer)
+
     pred_answer = pred_answer[0].lower().split(',')[0]
     if pred_answer == actual_answer:
         close_ended_correct += 1
 
-    print('image:', im_name, f'Question: Which of these countries is this image from? (united states/united kingdom/india/{actual_answer}) answer:', pred_answer, 'actual answer:', actual_answer)
+    print('image:', im_name, f'Question: Which of these countries is this image from? ({choice_text}) answer:', pred_answer, 'actual answer:', actual_answer)
     print()
     
 print('===================================================')
