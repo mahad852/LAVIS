@@ -32,17 +32,24 @@ for i, im_name in enumerate(image_files):
     raw_image = Image.open(os.path.join(root_image_dir, im_name)).convert("RGB")
     image = vis_processors["eval"](raw_image).unsqueeze(0).to(device)
 
-    pred_answer = model.generate({"image": image, "prompt": "Question: which city is this image from? Answer:"})
+    pred_answer = model.generate({"image": image, 
+                                  "prompt": "Question: which city is this image from? Answer:"}, use_nucleus_sampling=True, repetition_penalty=1.5)
     actual_answer = ' '.join(im_name.split('_')[0:-2]).lower()
-    print(pred_answer)
-    if pred_answer[0].lower() == actual_answer:
+    print('model output1:', pred_answer)
+    pred_answer = pred_answer[0].lower().split(',')[0]
+
+    if pred_answer == actual_answer:
         open_ended_correct += 1
 
     print('image:', im_name, 'question: which city is this image from? answer:', pred_answer, 'actual answer:', actual_answer)
     
     actual_answer = ' '.join(city_info['_'.join(im_name.split('_')[0:-2])]['country'].split('_')).lower()
-    pred_answer = model.generate({"image": image, "prompt": f"Question: Which of these countries is this image from? (united states/united kingdom/india/{actual_answer}) Answer:"})
-    if pred_answer[0].lower() == actual_answer:
+    pred_answer = model.generate({"image": image, 
+                                  "prompt": f"Question: Which of these countries is this image from? (united states/united kingdom/india/{actual_answer}) Answer:"},
+                                  use_nucleus_sampling=True, repetition_penalty=1.5)
+    print('model output2:', pred_answer)
+    pred_answer = pred_answer[0].lower().split(',')[0]
+    if pred_answer == actual_answer:
         close_ended_correct += 1
 
     print('image:', im_name, f'Question: Which of these countries is this image from? (united states/united kingdom/india/{actual_answer}) answer:', pred_answer, 'actual answer:', actual_answer)
