@@ -13,7 +13,7 @@ from lavis.datasets.datasets.retrieval_datasets import (
     VideoRetrievalEvalDataset,
 )
 
-from lavis.datasets.datasets.wgv_vqa_datasets import (
+from lavis.datasets.datasets.wgv_retrieval_datasets import (
     WGVRetrievalEvalDataset,
     WGVRetrievalDataset
 )
