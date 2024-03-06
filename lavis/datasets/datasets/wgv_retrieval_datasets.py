@@ -30,29 +30,37 @@ class WGVRetrievalEvalDataset(BaseDataset, __DisplMixin):
         self.vis_root = vis_root
         self.city_info = {}
 
-        txt_id = 0
-        self.text = []
-        self.txt2img = {}
+        countries = set()
 
         with open(ann_paths[0], 'r') as f:
             lines = f.readlines()[1:]
             for line in lines:
                 info = line[:-1].split(',')
                 self.city_info[info[0]] = {'state' : info[1], 'country' : info[2], 'continent': info[3]}
-                self.city_info[info[0]]['texts'] = [f'a photo i took in {clean_location_text(info[0])}.', 
-                         f'a photo showing the country of {clean_location_text(info[2])}.']
-                
-                self.city_info[info[0]]['txt_ids'] = [txt_id, txt_id + 1]
-                
-                self.text.extend(self.city_info[info[0]]['texts'])
-                
-                self.txt2img[txt_id] = []
-                self.txt2img[txt_id + 1] = []
-                
-                txt_id += 2
+                countries.add(info[2])
 
-        self.annotation = []
         txt_id = 0
+        self.text = []
+        self.txt2img = {}
+
+        self.country_texts = {}
+        self.country_txt_ids = {} 
+
+        for country in countries:
+            country_texts = [f'a photo i took in {clean_location_text(country)}.',
+                             f'a photo showing the country of {clean_location_text(country)}.',
+                             f'a photo from my home country of {clean_location_text(country)}.']
+            
+            self.country_texts[country] = country_texts
+            self.country_txt_ids[country] = []
+
+            for country_text in country_texts:
+                self.text.append(country_text)
+                self.txt2img[txt_id] = []
+                self.country_txt_ids[country].append(txt_id)
+                txt_id += 1
+                
+        self.annotation = []
 
         self.image = []
         self.img2txt = {}
@@ -60,18 +68,19 @@ class WGVRetrievalEvalDataset(BaseDataset, __DisplMixin):
         self.vis_processor = vis_processor
         self.text_processor = text_processor
 
-        image_files = os.listdir(self.vis_root)[:4000]
+        image_files = os.listdir(self.vis_root)[:8000]
 
         for i, im_name in enumerate(image_files):
             city = '_'.join(im_name.split('_')[0:-2])
+            country = self.city_info[city]['country']
 
-            self.annotation.append({'image' : im_name, 'instance_id' : str(i), 'caption' : self.city_info[city]['texts']})
+            self.annotation.append({'image' : im_name, 'instance_id' : str(i), 'caption' : self.country_texts[country]})
             
 
             self.img2txt[i] = []
-            self.img2txt[i].extend(self.city_info[city]['txt_ids'])
+            self.img2txt[i].extend(self.country_txt_ids[country])
 
-            for txt_id in self.city_info[city]['txt_ids']:
+            for txt_id in self.country_txt_ids[country]:
                 self.txt2img[txt_id].append(i)
                 
             self.image.append(im_name)
