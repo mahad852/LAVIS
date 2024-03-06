@@ -9,7 +9,7 @@ device = torch.device("cuda")
 root_image_dir = '/datasets/WGV/val'
 labels_path = '/datasets/WGV/labels_list.csv'
 
-image_files = os.listdir('/datasets/WGV/val')[:20]
+image_files = os.listdir('/datasets/WGV/val')
 
 
 
@@ -37,7 +37,7 @@ for i, im_name in enumerate(image_files):
     image = vis_processors["eval"](raw_image).unsqueeze(0).to(device)
 
     pred_answer = model.generate({"image": image, 
-                                  "prompt": "Question: which country is this image from? Answer:"}, use_nucleus_sampling=True, repetition_penalty=1.5)
+                                  "prompt": "Question: Which country is this image from? Answer:"}, use_nucleus_sampling=True, repetition_penalty=1.5)
     
     actual_answer = ' '.join(city_info['_'.join(im_name.split('_')[0:-2])]['country'].split('_')).lower()
     # print('model output1:', pred_answer)
