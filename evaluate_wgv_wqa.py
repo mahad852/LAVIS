@@ -14,7 +14,7 @@ image_files = os.listdir('/datasets/WGV/val')[:5]
 
 
 # loads BLIP-2 pre-trained model
-model, vis_processors, _ = load_model_and_preprocess(name="blip2_opt", model_type="pretrain_opt6.7b", is_eval=True, device=device)
+model, vis_processors, _ = load_model_and_preprocess(name="blip2_opt", model_type="pretrain_opt2.7b", is_eval=True, device=device)
 
 city_info = {}
 
