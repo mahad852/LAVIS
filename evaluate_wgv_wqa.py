@@ -9,7 +9,7 @@ device = torch.device("cuda")
 root_image_dir = '/datasets/WGV/val'
 labels_path = '/datasets/WGV/labels_list.csv'
 
-image_files = os.listdir('/datasets/WGV/val')[:5]
+image_files = os.listdir('/datasets/WGV/val')[:20]
 
 
 
@@ -30,7 +30,7 @@ open_ended_correct = 0
 close_ended_correct = 0
 
 popular_countries = ['united states', 'united kingdom', 'india']
-choice_text = '/'.join(popular_countries)
+default_choice_text = '/'.join(popular_countries)
 
 for i, im_name in enumerate(image_files):
     raw_image = Image.open(os.path.join(root_image_dir, im_name)).convert("RGB")
@@ -50,7 +50,7 @@ for i, im_name in enumerate(image_files):
     
     actual_answer = ' '.join(city_info['_'.join(im_name.split('_')[0:-2])]['country'].split('_')).lower()
     
-    choice_text = choice_text if actual_answer in popular_countries else choice_text + '/' + actual_answer
+    choice_text = default_choice_text if actual_answer in popular_countries else default_choice_text + '/' + actual_answer
     
     pred_answer = model.generate({"image": image, 
                                   "prompt": f"Question: Which of these countries is this image from? ({choice_text}) Answer:"},
