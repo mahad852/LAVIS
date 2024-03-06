@@ -30,7 +30,7 @@ open_ended_correct = 0
 close_ended_correct = 0
 
 popular_countries = ['united states', 'united kingdom', 'india']
-default_choice_text = '/'.join(popular_countries)
+default_choice_text = ','.join(popular_countries)
 
 for i, im_name in enumerate(image_files):
     raw_image = Image.open(os.path.join(root_image_dir, im_name)).convert("RGB")
@@ -50,10 +50,10 @@ for i, im_name in enumerate(image_files):
     
     actual_answer = ' '.join(city_info['_'.join(im_name.split('_')[0:-2])]['country'].split('_')).lower()
     
-    choice_text = default_choice_text if actual_answer in popular_countries else default_choice_text + '/' + actual_answer
+    choice_text = default_choice_text if actual_answer in popular_countries else default_choice_text + ',' + actual_answer
     
     pred_answer = model.generate({"image": image, 
-                                  "prompt": f"Question: Which of these countries is this image from? ({choice_text}) Answer:"},
+                                  "prompt": f"Question: Which of these countries ({choice_text}) is this image from? Answer:"},
                                   use_nucleus_sampling=True, repetition_penalty=1.5)
     
     # print('model output2:', pred_answer)
