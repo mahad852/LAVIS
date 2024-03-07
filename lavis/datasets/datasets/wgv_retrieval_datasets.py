@@ -68,7 +68,7 @@ class WGVRetrievalEvalDataset(BaseDataset, __DisplMixin):
         self.vis_processor = vis_processor
         self.text_processor = text_processor
 
-        image_files = os.listdir(self.vis_root)[:8000]
+        image_files = os.listdir(self.vis_root)
 
         for i, im_name in enumerate(image_files):
             city = '_'.join(im_name.split('_')[0:-2])
