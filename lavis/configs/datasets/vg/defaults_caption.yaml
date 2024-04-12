@@ -13,6 +13,6 @@ datasets:
       annotations:
         train:
           url: https://storage.googleapis.com/sfr-vision-language-research/LAVIS/datasets/visual_genome/vg_caption.json
-          storage: vg/annotations/vg_caption.json
+          storage: /home/cap6412.student3/datasets/vg/annotations/vg_caption.json
       images:
-        storage: vg/images/
+        storage: /datasets/VG
