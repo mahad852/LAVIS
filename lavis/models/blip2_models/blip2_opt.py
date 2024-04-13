@@ -107,7 +107,9 @@ class Blip2OPT(Blip2Base):
     def forward(self, samples):
         image = samples["image"]
         with self.maybe_autocast():
-            image_embeds = self.ln_vision(self.visual_encoder(image))
+            image_embeds = self.visual_encoder(image)
+            print("vit response shape:", image_embeds.shape)
+            image_embeds = self.ln_vision(image_embeds)
         image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(
             image.device
         )
