@@ -107,14 +107,11 @@ class Blip2OPT(Blip2Base):
     def forward(self, samples):
         image = samples["image"]
         with self.maybe_autocast():
-            image_embeds = self.visual_encoder(image)
-            print("vit response shape:", image_embeds.shape)
-            image_embeds = self.ln_vision(image_embeds)
+            image_embeds = self.ln_vision(self.visual_encoder(image))
         image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(
             image.device
         )
 
-        print("Image Embedding Shape: ", image_embeds.shape)
         query_tokens = self.query_tokens.expand(image_embeds.shape[0], -1, -1)
         query_output = self.Qformer.bert(
             query_embeds=query_tokens,

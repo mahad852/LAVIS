@@ -49,15 +49,12 @@ class Blip2GVT(Blip2OPT):
     def forward(self, samples):
         image = samples["image"]
         with self.maybe_autocast():
-            image_embeds = self.visual_encoder_gvt.forward_features(image, return_all_features=True)
-            print("vit response shape:", image_embeds.shape)
-            self.ln_vision(self.reduction_layer(image_embeds))
+            image_embeds = self.ln_vision(self.reduction_layer(self.visual_encoder_gvt.forward_features(image, return_all_features=True)))
 
         image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(
             image.device
         )
 
-        print("Image Embedding Shape: ", image_embeds.shape)
         query_tokens = self.query_tokens.expand(image_embeds.shape[0], -1, -1)
         query_output = self.Qformer.bert(
             query_embeds=query_tokens,
