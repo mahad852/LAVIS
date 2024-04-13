@@ -157,3 +157,5 @@ cache/
 
 *.out
 *.slurm
+
+*.pth
