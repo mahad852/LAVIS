@@ -49,7 +49,7 @@ class Blip2GVT(Blip2OPT):
     def forward(self, samples):
         image = samples["image"]
         with self.maybe_autocast():
-            image_embeds = self.ln_vision(self.reduction_layer(self.visual_encoder_gvt(image)))
+            image_embeds = self.ln_vision(self.reduction_layer(self.visual_encoder_gvt.forward_features(image)))
         image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(
             image.device
         )
@@ -133,7 +133,7 @@ class Blip2GVT(Blip2OPT):
         """
         image = samples["image"]
         with self.maybe_autocast():
-            image_embeds = self.ln_vision(self.reduction_layer(self.visual_encoder_gvt(image)))
+            image_embeds = self.ln_vision(self.reduction_layer(self.visual_encoder_gvt.forward_features(image)))
             image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(
                 image.device
             )
@@ -208,7 +208,7 @@ class Blip2GVT(Blip2OPT):
     ):
         image = samples["image"]
         with self.maybe_autocast():
-            image_embeds = self.ln_vision(self.reduction_layer(self.visual_encoder_gvt(image)))
+            image_embeds = self.ln_vision(self.reduction_layer(self.visual_encoder_gvt.forward_features(image)))
             image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(
                 image.device
             )
