@@ -23,6 +23,7 @@ class Blip2GVT(Blip2OPT):
                 param.requires_grad = False
         self.visual_encoder_gvt = self.visual_encoder_gvt.eval()
         self.visual_encoder_gvt.train = disabled_train
+        self.freeze_all_except_reduction_layer()
 
     def init_gvt_vision_encoder(self):
         encoder = EVAVisionTransformer(img_size=224, patch_size=14, depth=24,
@@ -103,6 +104,13 @@ class Blip2GVT(Blip2OPT):
         loss = outputs.loss
 
         return {"loss": loss}
+
+    def freeze_all_except_reduction_layer(self):
+        for name, param in self.named_parameters():
+            if not "reduction" in name:
+                param.requires_grad = False
+            else:
+                param.requires_grad = True
 
     @torch.no_grad()
     def generate(
