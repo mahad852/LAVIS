@@ -7,6 +7,7 @@ model:
   arch: blip2_gvt
   model_type: pretrain_opt6.7b
   load_pretrained: True #pretrain from scratch
+  pretrained: "https://storage.googleapis.com/sfr-vision-language-research/LAVIS/models/BLIP2/blip2_pretrained.pth"
   freeze_vit: True
 
 
