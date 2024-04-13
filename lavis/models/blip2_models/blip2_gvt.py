@@ -33,18 +33,12 @@ class Blip2GVT(Blip2OPT):
                                         rope=True, pt_hw_seq_len=16, intp_freq=True,
                                         naiveswiglu=True, subln=True)
         
-        params = torch.load("gvt.pth", map_location="cpu")['model']
+        params = torch.load("gvt.pth", map_location="cpu")
         
         new_state_dict = {}
         for k, v in params.items():
-            if 'encoder.' in k:
-                new_k = k.replace("encoder.", "")
-                new_state_dict[new_k] = v
-    
-        new_state_dict = {}
-        for k, v in params.items():
-            if 'visual' in k and 'head' not in k:
-                new_k = k.replace("visual.", "")
+            if 'visual_encoder.' in k:
+                new_k = k.replace("visual_encoder.", "")
                 new_state_dict[new_k] = v
 
         self.__load_state_dict(encoder, new_state_dict)
