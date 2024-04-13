@@ -43,10 +43,10 @@ run:
   warmup_lr: 1e-6
 
   weight_decay: 0.05
-  max_epoch: 10
+  max_epoch: 1
   batch_size_train: 100
   batch_size_eval: 64
-  num_workers: 4
+  num_workers: 1
   warmup_steps: 5000
 
   seed: 42
