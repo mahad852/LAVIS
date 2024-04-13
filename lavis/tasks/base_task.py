@@ -113,7 +113,7 @@ class BaseTask:
     ):
         return self._train_inner_loop(
             epoch=epoch,
-            iters_per_epoch=10,
+            iters_per_epoch=200,
             model=model,
             data_loader=data_loader,
             optimizer=optimizer,
