@@ -5,7 +5,7 @@
 
 model:
   arch: blip2_gvt
-  model_type: caption_coco_opt2.7b
+  model_type: caption_coco_opt6.7b
   load_finetuned: False
   use_grad_checkpoint: True
   freeze_vit: False
@@ -15,10 +15,10 @@ datasets:
     vis_processor:
         train:
           name: "blip2_image_train"
-          image_size: 364
+          image_size: 224
         eval:
           name: "blip_image_eval"
-          image_size: 364
+          image_size: 224
     text_processor:
         train:
           name: "blip_caption"

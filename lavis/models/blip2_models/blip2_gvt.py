@@ -30,7 +30,7 @@ class Blip2GVT(Blip2OPT):
                                         mlp_ratio=2.6667, num_heads=16, embed_dim=1024,
                                         drop_path_rate=0, xattn=False,
                                         qkv_bias=True,
-                                        norm_layer=partial(FusedLayerNorm, eps=1e-6),
+                                        norm_layer=partial(nn.LayerNorm, eps=1e-6),
                                         rope=True, pt_hw_seq_len=16, intp_freq=True,
                                         naiveswiglu=True, subln=True)
         
