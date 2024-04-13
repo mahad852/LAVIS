@@ -96,6 +96,10 @@ def main():
         if param.requires_grad:
             print(name, param.shape, "requires_grad=True")
 
+    for name, param in model.named_parameters():
+        if param.device == "cpu":
+            print(f"parameter:{name} running on cpu")
+
 
 if __name__ == "__main__":
     main()
