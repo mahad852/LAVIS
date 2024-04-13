@@ -112,6 +112,7 @@ class Blip2OPT(Blip2Base):
             image.device
         )
 
+        print("Image Embedding Shape: ", image_embeds.shape)
         query_tokens = self.query_tokens.expand(image_embeds.shape[0], -1, -1)
         query_output = self.Qformer.bert(
             query_embeds=query_tokens,
