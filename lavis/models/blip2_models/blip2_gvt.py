@@ -27,7 +27,7 @@ class Blip2GVT(Blip2OPT):
     def init_gvt_vision_encoder(self):
         encoder = EVAVisionTransformer(img_size=224, patch_size=14, depth=24,
                                         mlp_ratio=2.6667, num_heads=16, embed_dim=1024,
-                                        drop_path_rate=0, xattn=True,
+                                        drop_path_rate=0, xattn=False,
                                         qkv_bias=True,
                                         norm_layer=partial(FusedLayerNorm, eps=1e-6),
                                         rope=True, pt_hw_seq_len=16, intp_freq=True,
