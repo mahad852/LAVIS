@@ -41,7 +41,7 @@ class Blip2GVT(Blip2OPT):
                 new_k = k.replace("visual_encoder.", "")
                 new_state_dict[new_k] = v
 
-        self.__load_state_dict(encoder, new_state_dict)
+        encoder.load_state_dict(new_state_dict)
         
         self.patch_embed_dim = 1408
         return encoder
