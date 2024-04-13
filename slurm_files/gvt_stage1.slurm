@@ -9,7 +9,8 @@
 #SBATCH --mail-type=BEGIN,END,FAIL # Send me email for various states
 #SBATCH --mail-user ma649596@ucf.edu # Use this address
 #SBATCH --output=outputs/gvt_1.out
-#SBATCH --error=outputs/gvt_2.err
+#SBATCH --error=outputs/gvt_1.err
+#SBATCH --constraint=gpu80
 
 # Load modules
 module load anaconda/anaconda3
