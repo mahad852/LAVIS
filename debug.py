@@ -92,7 +92,9 @@ def main():
     task = tasks.setup_task(cfg)
     model = task.build_model(cfg)
 
-    print(model)
+    for parameter in model.parameters():
+        if parameter.requires_grad:
+            print(parameter, "requires_grad=True")
 
 if __name__ == "__main__":
     main()
