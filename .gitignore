@@ -156,6 +156,5 @@ debug*/
 cache/
 
 *.out
-*.slurm
 
 *.pth
