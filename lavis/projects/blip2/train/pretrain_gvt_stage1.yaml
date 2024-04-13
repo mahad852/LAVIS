@@ -8,17 +8,17 @@ model:
   model_type: caption_coco_opt6.7b
   load_finetuned: False
   use_grad_checkpoint: True
-  freeze_vit: False
+  freeze_vit: True
 
 datasets:
   coco_caption: # name of the dataset builder
     vis_processor:
         train:
           name: "blip2_image_train"
-          image_size: 224
+          image_size: 364
         eval:
           name: "blip_image_eval"
-          image_size: 224
+          image_size: 364
     text_processor:
         train:
           name: "blip_caption"
