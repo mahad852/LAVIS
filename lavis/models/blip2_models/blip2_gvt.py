@@ -9,7 +9,7 @@ from lavis.models.blip2_models.blip2 import disabled_train
 
 from lavis.models.eva_gvt import EVAVisionTransformer
 
-from apex.normalization.fused_layer_norm import FusedLayerNorm
+# from apex.normalization.fused_layer_norm import FusedLayerNorm
 
 
 @registry.register_model("blip2_gvt")
