@@ -32,7 +32,7 @@ class Blip2GVT(Blip2OPT):
         # self.freeze_all_except_reduction_layer()
 
     def init_gvt_vision_encoder(self, img_size):
-        encoder = EVAVisionTransformer(img_size=img_size, patch_size=14, depth=24,
+        encoder = EVAVisionTransformer(img_size=224, patch_size=14, depth=24,
                                         mlp_ratio=2.6667, num_heads=16, embed_dim=1024,
                                         drop_path_rate=0, xattn=False,
                                         qkv_bias=True,
