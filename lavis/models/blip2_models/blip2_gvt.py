@@ -18,12 +18,11 @@ class Blip2GVT(Blip2OPT):
         self,
         vit_model="eva_clip_g",
         img_size=224,
-        drop_path_rate=0,
         **args
     ):
-        super().__init__(vit_model=vit_model, img_size=img_size, drop_path_rate=drop_path_rate, **args)
+        super().__init__(vit_model=vit_model, img_size=img_size, **args)
 
-        self.visual_encoder_gvt = self.init_gvt_vision_encoder(img_size, drop_path_rate)
+        self.visual_encoder_gvt = self.init_gvt_vision_encoder(img_size)
         self.reduction_layer = nn.Linear(1024, self.patch_embed_dim)
 
         for name, param in self.visual_encoder_gvt.named_parameters():
@@ -32,10 +31,10 @@ class Blip2GVT(Blip2OPT):
         self.visual_encoder_gvt.train = disabled_train
         # self.freeze_all_except_reduction_layer()
 
-    def init_gvt_vision_encoder(self, img_size, drop_path_rate):
+    def init_gvt_vision_encoder(self, img_size):
         encoder = EVAVisionTransformer(img_size=img_size, patch_size=14, depth=24,
                                         mlp_ratio=2.6667, num_heads=16, embed_dim=1024,
-                                        drop_path_rate=drop_path_rate, xattn=False,
+                                        drop_path_rate=0, xattn=False,
                                         qkv_bias=True,
                                         norm_layer=partial(nn.LayerNorm, eps=1e-6),
                                         rope=True, pt_hw_seq_len=16, intp_freq=True,
