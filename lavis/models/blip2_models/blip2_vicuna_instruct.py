@@ -143,6 +143,8 @@ class Blip2VicunaInstruct(Blip2Base):
         # print('-----------------')
 
         image = samples["image"]
+        image.requires_grad = True
+        
         with self.maybe_autocast():
             image_embeds = self.ln_vision(self.visual_encoder(image))
         image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
@@ -257,8 +259,6 @@ class Blip2VicunaInstruct(Blip2Base):
             prompt = samples["prompt"]
         else:
             prompt = self.prompt
-
-        print("PROMPT:", prompt)
 
         image = samples["image"]
 
