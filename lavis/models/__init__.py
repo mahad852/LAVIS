@@ -79,7 +79,7 @@ __all__ = [
     "Blip2ITM",
     "Blip2OPT",
     "Blip2GVT",
-    "Blip2GvtVicuna",
+    "Blip2GVTVicuna",
     "Blip2T5",
     "Blip2T5Instruct",
     "Blip2VicunaInstruct",
