@@ -258,6 +258,8 @@ class Blip2VicunaInstruct(Blip2Base):
         else:
             prompt = self.prompt
 
+        print("PROMPT:", prompt)
+
         image = samples["image"]
 
         bs = image.size(0)
