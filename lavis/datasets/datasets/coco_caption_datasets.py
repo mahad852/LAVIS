@@ -55,7 +55,7 @@ class COCOCapInstructDataset(CaptionDataset):
 
         return {
             "image": image,
-            "text_input": "Describe the content of this image in 20 words.",
+            "text_input": "a photo of",
             "text_output" : caption,
             "image_id": self.img_ids[ann["image_id"]],
         }
