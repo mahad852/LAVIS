@@ -144,7 +144,7 @@ class Blip2VicunaInstruct(Blip2Base):
 
         image = samples["image"]
         image.requires_grad = True
-        
+
         with self.maybe_autocast():
             image_embeds = self.ln_vision(self.visual_encoder(image))
         image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
@@ -160,6 +160,7 @@ class Blip2VicunaInstruct(Blip2Base):
                 max_length=self.max_txt_len,
                 return_tensors="pt",
             ).to(image.device)
+            text_Qformer.requires_grad = True
             query_atts = torch.ones(query_tokens.size()[:-1], dtype=torch.long).to(image.device)
             Qformer_atts = torch.cat([query_atts, text_Qformer.attention_mask],dim=1)
 
