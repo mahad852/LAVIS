@@ -42,6 +42,23 @@ class COCOCapEvalDataset(CaptionEvalDataset):
             "image_id": img_id,
             "instance_id": ann["instance_id"],
         }
+    
+class COCOCapInstructDataset(CaptionDataset):
+    def __getitem__(self, index):
+        ann = self.annotation[index]
+
+        image_path = os.path.join(self.vis_root, ann["image"])
+        image = Image.open(image_path).convert("RGB")
+
+        image = self.vis_processor(image)
+        caption = self.text_processor(ann["caption"])
+
+        return {
+            "image": image,
+            "text_input": "Describe the content of this image in 20 words.",
+            "text_output" : caption,
+            "image_id": self.img_ids[ann["image_id"]],
+        }
 
 
 class NoCapsEvalDataset(CaptionEvalDataset):

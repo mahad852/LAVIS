@@ -10,6 +10,7 @@ from lavis.datasets.datasets.coco_caption_datasets import (
     COCOCapDataset,
     COCOCapEvalDataset,
     NoCapsEvalDataset,
+    COCOCapInstructDataset
 )
 
 from lavis.common.registry import registry
@@ -28,6 +29,14 @@ class COCOCapBuilder(BaseDatasetBuilder):
         "default": "configs/datasets/coco/defaults_cap.yaml",
     }
 
+@registry.register_builder("coco_caption_instruct")
+class COCOCapInstructBuilder(BaseDatasetBuilder):
+    train_dataset_cls = COCOCapInstructDataset
+    eval_dataset_cls = COCOCapEvalDataset
+
+    DATASET_CONFIG_DICT = {
+        "default": "configs/datasets/coco/defaults_cap.yaml",
+    }
 
 @registry.register_builder("nocaps")
 class COCOCapBuilder(BaseDatasetBuilder):

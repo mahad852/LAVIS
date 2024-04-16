@@ -4,7 +4,7 @@
  # For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
 
 model:
-  arch: blip2_gvt_vicuna
+  arch: blip2_vicuna_instruct
   model_type: vicuna7b
   use_grad_checkpoint: True
   freeze_vit: True
@@ -20,8 +20,10 @@ model:
 
   num_query_token: 32
 
+  prompt: "a photo of"
+
 datasets:
-  coco_caption: # name of the dataset builder
+  coco_caption_instruct: # name of the dataset builder
     vis_processor:
         train:
           name: "blip2_image_train"
