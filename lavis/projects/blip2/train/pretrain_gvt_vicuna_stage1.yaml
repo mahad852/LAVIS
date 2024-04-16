@@ -16,7 +16,7 @@ model:
   vit_precision: "fp16"
 
   # path to Vicuna checkpoint
-  llm_model: "./llm/vicuna-7b/snapshots/694d39416b1744d939760f5257c4bb08b2fae400/"
+  llm_model: "./llm/models--eachadea--vicuna-7b-1.1/snapshots/9d8eea215e00b388a22e8f050768ea8911d41f1d/"
 
   num_query_token: 32
 
