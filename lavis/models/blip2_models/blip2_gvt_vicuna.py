@@ -63,7 +63,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
 
         image = samples["image"]
         with self.maybe_autocast():
-            image_embeds = self.ln_vision(self.visual_encoder_gvt(image))
+            image_embeds = self.ln_vision(self.visual_encoder_gvt.forward_features(image, return_all_features=True))
         image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
 
         bs = image.size(0)
@@ -212,7 +212,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
             for j in range(image.size(2)):
                 this_frame = image[:,:,j,:,:]
                 with self.maybe_autocast():
-                    frame_embeds = self.ln_vision(self.visual_encoder_gvt(this_frame))
+                    frame_embeds = self.ln_vision(self.visual_encoder_gvt.forward_features(this_frame, return_all_features=True))
                 frame_atts = torch.ones(frame_embeds.size()[:-1], dtype=torch.long).to(image.device)
 
                 if self.qformer_text_input:
@@ -239,7 +239,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
             atts_llm = torch.cat(atts_llm, dim=1)
         else:
             with self.maybe_autocast():
-                image_embeds = self.ln_vision(self.visual_encoder_gvt(image))
+                image_embeds = self.ln_vision(self.visual_encoder_gvt.forward_features(image, return_all_features=True))
             image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
 
             if self.qformer_text_input:
@@ -392,7 +392,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
             for j in range(image.size(2)):
                 this_frame = image[:,:,j,:,:]
                 with self.maybe_autocast():
-                    frame_embeds = self.ln_vision(self.visual_encoder_gvt(this_frame))
+                    frame_embeds = self.ln_vision(self.visual_encoder_gvt.forward_features(this_frame, return_all_features=True))
                     frame_atts = torch.ones(frame_embeds.size()[:-1], dtype=torch.long).to(image.device)
 
                 if self.qformer_text_input:
@@ -420,7 +420,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
             atts_llm = torch.cat(atts_llm, dim=1)
         else:
             with self.maybe_autocast():
-                image_embeds = self.ln_vision(self.visual_encoder_gvt(image))
+                image_embeds = self.ln_vision(self.visual_encoder_gvt.forward_features(image, return_all_features=True))
             image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
 
             if self.qformer_text_input:
