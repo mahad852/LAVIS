@@ -35,7 +35,7 @@ class COCOCapInstructBuilder(BaseDatasetBuilder):
     eval_dataset_cls = COCOCapEvalDataset
 
     DATASET_CONFIG_DICT = {
-        "default": "configs/datasets/coco/defaults_cap.yaml",
+        "default": "configs/datasets/coco/defaults_cap_instruct.yaml",
     }
 
 @registry.register_builder("nocaps")

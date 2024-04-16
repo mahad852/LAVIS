@@ -24,7 +24,6 @@ model:
 
 datasets:
   coco_caption_instruct: # name of the dataset builder
-    data_type: images
     vis_processor:
         train:
           name: "blip2_image_train"
