@@ -20,7 +20,7 @@ model:
 
   num_query_token: 32
 
-  prompt: "a photo of"
+  prompt: "a photo of "
 
 datasets:
   coco_caption_instruct: # name of the dataset builder
