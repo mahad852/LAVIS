@@ -54,7 +54,6 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
                 new_state_dict[new_k] = v
 
         encoder.load_state_dict(new_state_dict)
-        encoder = encoder.to(torch.float32)
         
         self.patch_embed_dim = 1408
         return encoder
@@ -68,9 +67,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         image = samples["image"]
         # image.requires_grad = True
         with self.maybe_autocast():
-            image_embeds = self.reduction_layer(self.visual_encoder_gvt.forward_features(image, return_all_features=True))
-            print("INITIAL IMAGE EMBEDS dtype:", image_embeds.dtype)
-            image_embeds = self.ln_vision(image_embeds) 
+            image_embeds = self.ln_vision(self.reduction_layer(self.visual_encoder_gvt.forward_features(image, return_all_features=True))).to(torch.float32)
         image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
 
         bs = image.size(0)
@@ -249,7 +246,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
             atts_llm = torch.cat(atts_llm, dim=1)
         else:
             with self.maybe_autocast():
-                image_embeds = self.ln_vision(self.reduction_layer(self.visual_encoder_gvt.forward_features(image, return_all_features=True)))
+                image_embeds = self.ln_vision(self.reduction_layer(self.visual_encoder_gvt.forward_features(image, return_all_features=True))).to(torch.float32)
             image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
 
             print(query_tokens.dtype, Qformer_atts.dtype, text_Qformer.input_ids.dtype, image_embeds.dtype, image_atts.dtype)
