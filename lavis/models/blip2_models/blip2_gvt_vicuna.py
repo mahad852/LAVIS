@@ -24,7 +24,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         super().__init__(vit_model=vit_model, img_size=img_size, **args)
 
         self.visual_encoder_gvt = self.init_gvt_vision_encoder(img_size)
-        self.reduction_layer = nn.Linear(1024, self.patch_embed_dim)
+        self.reduction_layer = nn.Linear(1024, self.patch_embed_dim, dtype=torch.float32)
 
         for name, param in self.visual_encoder_gvt.named_parameters():
                 param.requires_grad = False
