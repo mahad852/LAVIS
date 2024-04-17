@@ -163,7 +163,8 @@ class Blip2VicunaInstruct(Blip2Base):
             text_Qformer.requires_grad = True
             query_atts = torch.ones(query_tokens.size()[:-1], dtype=torch.long).to(image.device)
             Qformer_atts = torch.cat([query_atts, text_Qformer.attention_mask],dim=1)
-
+            
+            print(query_tokens.dtype, Qformer_atts.dtype, text_Qformer.input_ids.dtype, image_embeds.dtype, image_atts.dtype)
             query_output = self.Qformer.bert(
                 text_Qformer.input_ids,
                 attention_mask=Qformer_atts,
@@ -327,6 +328,7 @@ class Blip2VicunaInstruct(Blip2Base):
             image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
 
             if self.qformer_text_input:
+                print(query_tokens.dtype, Qformer_atts.dtype, text_Qformer.input_ids.dtype, image_embeds.dtype, image_atts.dtype)
                 query_output = self.Qformer.bert(
                     text_Qformer.input_ids,
                     attention_mask=Qformer_atts,
