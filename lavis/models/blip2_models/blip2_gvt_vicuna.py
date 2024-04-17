@@ -51,6 +51,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
                 new_state_dict[new_k] = v
 
         encoder.load_state_dict(new_state_dict)
+        encoder = encoder.to(torch.float32)
         
         self.patch_embed_dim = 1408
         return encoder
