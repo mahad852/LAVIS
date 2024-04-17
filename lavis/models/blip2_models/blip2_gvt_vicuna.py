@@ -26,8 +26,11 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         self.visual_encoder_gvt = self.init_gvt_vision_encoder(img_size)
         self.reduction_layer = nn.Linear(1024, self.patch_embed_dim, dtype=torch.float32)
 
+        for name, parameter in self.visual_encoder_gvt.named_parameters():
+            print("name:", name, "dtype:", parameter.dtype)
+
         for name, param in self.visual_encoder_gvt.named_parameters():
-                param.requires_grad = False
+            param.requires_grad = False
         self.visual_encoder_gvt = self.visual_encoder_gvt.eval()
         self.visual_encoder_gvt.train = disabled_train
         # self.freeze_all_except_reduction_layer()
