@@ -62,7 +62,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         # print('-----------------')
 
         image = samples["image"]
-        image.requires_grad = True
+        # image.requires_grad = True
         with self.maybe_autocast():
             image_embeds = self.ln_vision(self.reduction_layer(self.visual_encoder_gvt.forward_features(image, return_all_features=True)))
         image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
@@ -78,7 +78,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
                 max_length=self.max_txt_len,
                 return_tensors="pt",
             ).to(image.device)
-            text_Qformer.requires_grad = True
+            # text_Qformer.requires_grad = True
             query_atts = torch.ones(query_tokens.size()[:-1], dtype=torch.long).to(image.device)
             Qformer_atts = torch.cat([query_atts, text_Qformer.attention_mask],dim=1)
 
