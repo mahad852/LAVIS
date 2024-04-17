@@ -26,8 +26,8 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         self.visual_encoder_gvt = self.init_gvt_vision_encoder(img_size)
         self.reduction_layer = nn.Linear(1024, self.patch_embed_dim, dtype=torch.float32)
 
-        for name, parameter in self.reduction_layer.named_parameters():
-            print("name:", name, "dtype:", parameter.dtype)
+        # for name, parameter in self.reduction_layer.named_parameters():
+        #     print("name:", name, "dtype:", parameter.dtype)
 
         for name, param in self.visual_encoder_gvt.named_parameters():
             param.requires_grad = False
@@ -36,7 +36,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         # self.freeze_all_except_reduction_layer()
 
     def init_gvt_vision_encoder(self, img_size):
-        print("image size received:", img_size)
+        # print("image size received:", img_size)
         encoder = EVAVisionTransformer(img_size=224, patch_size=14, depth=24,
                                         mlp_ratio=2.6667, num_heads=16, embed_dim=1024,
                                         drop_path_rate=0, xattn=False,
@@ -85,7 +85,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
             query_atts = torch.ones(query_tokens.size()[:-1], dtype=torch.long).to(image.device)
             Qformer_atts = torch.cat([query_atts, text_Qformer.attention_mask],dim=1)
 
-            print(query_tokens.dtype, Qformer_atts.dtype, text_Qformer.input_ids.dtype, image_embeds.dtype, image_atts.dtype)
+            # print(query_tokens.dtype, Qformer_atts.dtype, text_Qformer.input_ids.dtype, image_embeds.dtype, image_atts.dtype)
 
             query_output = self.Qformer.bert(
                 text_Qformer.input_ids,
@@ -249,7 +249,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
                 image_embeds = self.ln_vision(self.reduction_layer(self.visual_encoder_gvt.forward_features(image, return_all_features=True))).to(torch.float32)
             image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
 
-            print(query_tokens.dtype, Qformer_atts.dtype, text_Qformer.input_ids.dtype, image_embeds.dtype, image_atts.dtype)
+            # print(query_tokens.dtype, Qformer_atts.dtype, text_Qformer.input_ids.dtype, image_embeds.dtype, image_atts.dtype)
 
             if self.qformer_text_input:
                 query_output = self.Qformer.bert(
