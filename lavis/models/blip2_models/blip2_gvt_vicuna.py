@@ -82,7 +82,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
             query_atts = torch.ones(query_tokens.size()[:-1], dtype=torch.long).to(image.device)
             Qformer_atts = torch.cat([query_atts, text_Qformer.attention_mask],dim=1)
 
-            print(query_tokens, Qformer_atts.dtype, text_Qformer.input_ids, image_embeds.dtype, image_atts.dtype)
+            print(query_tokens.dtype, Qformer_atts.dtype, text_Qformer.input_ids.dtype, image_embeds.dtype, image_atts.dtype)
 
             query_output = self.Qformer.bert(
                 text_Qformer.input_ids,
@@ -246,8 +246,8 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
                 image_embeds = self.ln_vision(self.reduction_layer(self.visual_encoder_gvt.forward_features(image, return_all_features=True)))
             image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
 
-            print(query_tokens, Qformer_atts.dtype, text_Qformer.input_ids, image_embeds.dtype, image_atts.dtype)
-            
+            print(query_tokens.dtype, Qformer_atts.dtype, text_Qformer.input_ids.dtype, image_embeds.dtype, image_atts.dtype)
+
             if self.qformer_text_input:
                 query_output = self.Qformer.bert(
                     text_Qformer.input_ids,
