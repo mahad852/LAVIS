@@ -68,7 +68,9 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         image = samples["image"]
         # image.requires_grad = True
         with self.maybe_autocast():
-            image_embeds = self.ln_vision(self.reduction_layer(self.visual_encoder_gvt.forward_features(image, return_all_features=True)))
+            image_embeds = self.reduction_layer(self.visual_encoder_gvt.forward_features(image, return_all_features=True))
+            print("INITIAL IMAGE EMBEDS dtype:", image_embeds.dtype)
+            image_embeds = self.ln_vision(image_embeds) 
         image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
 
         bs = image.size(0)
