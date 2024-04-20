@@ -17,7 +17,7 @@ from lavis.datasets.datasets.gqa_datasets import GQADataset, GQAEvalDataset
 MMVPVQADataset = COCOVQADataset
 MMVPVQAEvalDataset = COCOVQAEvalDataset
 
-@registry.register_builder("coco_vqa")
+@registry.register_builder("mmvp_vqa")
 class MMVPVQABuilder(BaseDatasetBuilder):
     train_dataset_cls = MMVPVQADataset
     eval_dataset_cls = MMVPVQAEvalDataset
