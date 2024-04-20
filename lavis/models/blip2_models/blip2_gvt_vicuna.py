@@ -12,6 +12,8 @@ import string
 
 import os
 
+from lavis.models.blip2_models.blip2 import compute_sim_matrix
+
 # from apex.normalization.fused_layer_norm import FusedLayerNorm
 
 
@@ -173,6 +175,14 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
             self.load_state_dict(weights['model'], strict=False) 
 
             print("LOADED FINETUED WEIGHTS")
+
+    def compute_sim_matrix(self, data_loader, task_cfg):
+        """
+        Compute similarity i2t, t2i matrix for the given data loader.
+        """
+        k_test = task_cfg.k_test
+
+        return compute_sim_matrix(model=self, data_loader=data_loader, k_test=k_test)
 
     @torch.no_grad()
     def generate(
