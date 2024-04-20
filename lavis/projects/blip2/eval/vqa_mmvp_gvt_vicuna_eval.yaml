@@ -10,7 +10,6 @@ model:
   model_type: vicuna7b
   use_grad_checkpoint: True
   freeze_vit: True
-  load_gvt_weights : False
 
   load_finetuned: False
   load_pretrained: True
