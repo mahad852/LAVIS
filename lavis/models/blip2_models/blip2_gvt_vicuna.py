@@ -10,6 +10,8 @@ from lavis.models.blip2_models.blip2 import disabled_train
 from lavis.models.eva_gvt import EVAVisionTransformer
 import string
 
+import os
+
 # from apex.normalization.fused_layer_norm import FusedLayerNorm
 
 
@@ -19,11 +21,13 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         self,
         vit_model="eva_clip_g",
         img_size=224,
+        load_gvt_weights = True,
         **args
     ):
         super().__init__(vit_model=vit_model, img_size=img_size, **args)
+        print("load_gvt_weights:", load_gvt_weights)
 
-        self.visual_encoder_gvt = self.init_gvt_vision_encoder(img_size)
+        self.visual_encoder_gvt = self.init_gvt_vision_encoder(load_gvt_weights)
         self.reduction_layer = nn.Linear(1024, self.patch_embed_dim, dtype=torch.float32)
 
         # for name, parameter in self.reduction_layer.named_parameters():
@@ -35,7 +39,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         self.visual_encoder_gvt.train = disabled_train
         # self.freeze_all_except_reduction_layer()
 
-    def init_gvt_vision_encoder(self, img_size):
+    def init_gvt_vision_encoder(self, load_gvt_weights):
         # print("image size received:", img_size)
         encoder = EVAVisionTransformer(img_size=224, patch_size=14, depth=24,
                                         mlp_ratio=2.6667, num_heads=16, embed_dim=1024,
@@ -45,16 +49,17 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
                                         rope=True, pt_hw_seq_len=16, intp_freq=True,
                                         naiveswiglu=True, subln=True)
         
-        params = torch.load("gvt.pth", map_location="cpu")
-        
-        new_state_dict = {}
-        for k, v in params.items():
-            if 'visual_encoder.' in k:
-                new_k = k.replace("visual_encoder.", "")
-                new_state_dict[new_k] = v
+        if load_gvt_weights:
+            params = torch.load("gvt.pth", map_location="cpu")
+            
+            new_state_dict = {}
+            for k, v in params.items():
+                if 'visual_encoder.' in k:
+                    new_k = k.replace("visual_encoder.", "")
+                    new_state_dict[new_k] = v
 
-        encoder.load_state_dict(new_state_dict)
-        
+            encoder.load_state_dict(new_state_dict)
+            
         self.patch_embed_dim = 1408
         return encoder
     
@@ -162,6 +167,15 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         loss = outputs.loss
 
         return {"loss": loss}
+    
+    def load_from_pretrained(self, url_or_filename):
+        super.__init__(url_or_filename)
+        
+        if os.path.exists("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240417072/checkpoint_best.pth"):
+            weights = torch.load("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240417072/checkpoint_best.pth")
+            self.load_state_dict(weights['model']) 
+
+            print("LOADED FINETUED WEIGHTS")
 
     @torch.no_grad()
     def generate(
