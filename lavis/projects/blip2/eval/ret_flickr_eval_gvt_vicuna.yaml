@@ -20,38 +20,39 @@ model:
 
   num_query_token: 32
 
+
 datasets:
-  mmvp_vqa: # name of the dataset builder
-    type: eval
+  flickr30k: # name of the dataset builder
     vis_processor:
         eval:
           name: "blip_image_eval"
           image_size: 224
     text_processor:
         eval:
-          name: "blip_question"
+          name: "blip_caption"
+
 run:
-  task: mmvp_vqa
-  # optimization-specific
+  task: retrieval
+
+  # dataloading
+  num_workers: 3
   batch_size_train: 16
-  batch_size_eval: 64
-  num_workers: 4
+  batch_size_eval: 32
 
-  # inference-specific
-  max_len: 10
-  min_len: 1
-  num_beams: 5
-  inference_method: "generate"
-  prompt: "Question: {} Short answer:"
+  test_splits: ["test"]
 
-  seed: 42
-  output_dir: "output/BLIP2_GVT/VQA/MMVP"
-
-  evaluate: True
-  test_splits: ["val"]
-
-  # distribution-specific
+  # distribution
   device: "cuda"
   world_size: 1
   dist_url: "env://"
   distributed: True
+  use_dist_eval_sampler: False
+
+  # model specific
+  k_test: 128
+
+  # misc
+  seed: 42
+  output_dir: "output/BLIP2_GVT/Retrieval_Flickr30k"
+
+  evaluate: True

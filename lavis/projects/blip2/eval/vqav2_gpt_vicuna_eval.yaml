@@ -20,8 +20,9 @@ model:
 
   num_query_token: 32
 
+
 datasets:
-  mmvp_vqa: # name of the dataset builder
+  coco_vqa: # name of the dataset builder
     type: eval
     vis_processor:
         eval:
@@ -30,8 +31,12 @@ datasets:
     text_processor:
         eval:
           name: "blip_question"
+    # build_info:
+    #     images:
+    #         storage: '/export/share/datasets/vision/coco/images/'
+
 run:
-  task: mmvp_vqa
+  task: vqa
   # optimization-specific
   batch_size_train: 16
   batch_size_eval: 64
@@ -45,7 +50,7 @@ run:
   prompt: "Question: {} Short answer:"
 
   seed: 42
-  output_dir: "output/BLIP2_GVT/VQA/MMVP"
+  output_dir: "output/BLIP2_GVT/VQA/COCO"
 
   evaluate: True
   test_splits: ["val"]
