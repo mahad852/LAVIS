@@ -12,10 +12,10 @@ from lavis.datasets.datasets.aok_vqa_datasets import AOKVQADataset, AOKVQAEvalDa
 from lavis.datasets.datasets.coco_vqa_datasets import COCOVQADataset, COCOVQAEvalDataset
 from lavis.datasets.datasets.vg_vqa_datasets import VGVQADataset
 from lavis.datasets.datasets.gqa_datasets import GQADataset, GQAEvalDataset
+from lavis.datasets.datasets.mmvp_vqa_datasets import MMVPVQAEvalDataset
 
 
 MMVPVQADataset = COCOVQADataset
-MMVPVQAEvalDataset = COCOVQAEvalDataset
 
 @registry.register_builder("mmvp_vqa")
 class MMVPVQABuilder(BaseDatasetBuilder):
