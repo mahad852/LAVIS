@@ -190,7 +190,7 @@ class MMVPVQATask(VQATask):
             pred = pred.lower().replace('(', '').replace(')', '')
             gts = [gt.lower().replace('(', '').replace(')', '') for gt in gts]
 
-            if len(pred.split()[0]) == 1:
+            if pred != '' and len(pred.split()[0]) == 1:
                 pred = pred.split()[0]
             
             vqa_acc = 1 if pred in gts else 0    
