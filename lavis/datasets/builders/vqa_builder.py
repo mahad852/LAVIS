@@ -24,6 +24,7 @@ class MMVPVQABuilder(BaseDatasetBuilder):
 
     DATASET_CONFIG_DICT = {
         "default": "configs/datasets/mvpp/defaults_vqa.yaml",
+        "eval" : "default": "configs/datasets/mvpp/defaults_vqa.yaml"
     }
 
 
