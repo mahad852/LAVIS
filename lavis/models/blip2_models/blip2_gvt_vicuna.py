@@ -183,6 +183,30 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         k_test = task_cfg.k_test
 
         return compute_sim_matrix(model=self, data_loader=data_loader, k_test=k_test)
+    
+    def forward_image(self, image):
+        image_embeds = self.ln_vision(self.reduction_layer(self.visual_encoder_gvt.forward_features(image, return_all_features=True))).to(torch.float32)
+        image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(
+            image.device
+        )
+
+        query_tokens = self.query_tokens.expand(image_embeds.shape[0], -1, -1)
+
+        query_output = self.Qformer.bert(
+            query_embeds=query_tokens,
+            encoder_hidden_states=image_embeds,
+            encoder_attention_mask=image_atts,
+            return_dict=True,
+        )
+        return query_output.last_hidden_state, image_embeds
+
+    def forward_text(self, text_tokens):
+        text_output = self.Qformer.bert(
+            text_tokens.input_ids,
+            attention_mask=text_tokens.attention_mask,
+            return_dict=True,
+        )
+        return text_output.last_hidden_state[:, 0, :]
 
     @torch.no_grad()
     def generate(
