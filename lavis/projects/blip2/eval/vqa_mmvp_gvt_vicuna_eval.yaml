@@ -33,7 +33,7 @@ datasets:
         eval:
           name: "blip_question"
 run:
-  task: vqa
+  task: mmvp_vqa
   # optimization-specific
   batch_size_train: 16
   batch_size_eval: 64

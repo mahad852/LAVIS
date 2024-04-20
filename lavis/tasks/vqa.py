@@ -15,6 +15,8 @@ from lavis.common.vqa_tools.vqa import VQA
 from lavis.common.vqa_tools.vqa_eval import VQAEval
 from lavis.tasks.base_task import BaseTask
 
+from lavis.common.utils import get_cache_path
+
 
 @registry.register_task("vqa")
 class VQATask(BaseTask):
@@ -86,6 +88,11 @@ class VQATask(BaseTask):
                 except AttributeError:
                     # if answer_list is not provided, then set it to None
                     pass
+
+        self.mmvp_questions_file_path = None
+        if "mmvp_vqa" in datasets and "val" in datasets["mmvp_vqa"]:
+            print("Found mmvp_qurstions_file_path")
+            self.mmvp_questions_file_path = get_cache_path(datasets["mmvp_vqa"]["val"].ann_paths[0])
 
         if len(self.ques_files) > 0:
             assert len(self.ques_files) == len(
@@ -165,6 +172,42 @@ class VQATask(BaseTask):
                 f.write(json.dumps(metrics) + "\n")
 
         return metrics
+    
+@registry.register_task("mmvp_vqa")
+class MMVPVQATask(VQATask):
+    @dist_utils.main_process
+    def _report_metrics(self, result_file, split):
+
+        results = json.load(open(result_file, "r"))
+        acc = []
+        gt_answers = [obj["answer"] for obj in json.load(open(get_cache_path("MMVP/Questions.json"), "r"))]
+
+        for i, res in enumerate(results):
+            pred = res["answer"]
+            gts =  gt_answers[i]
+
+            # if self.inference_method == "generate":
+            pred = pred.lower().replace('(', '').replace(')', '')
+            gts = [gt.lower().replace('(', '').replace(')', '') for gt in gts]
+
+            if len(pred.split()[0]) == 1:
+                pred = pred.split()[0]
+            
+            vqa_acc = 1 if pred in gts else 0    
+            acc.append(vqa_acc)
+
+        accuracy = sum(acc) / len(acc) * 100
+        metrics = {"agg_metrics": accuracy, "acc": accuracy}
+
+        with open(
+            os.path.join(registry.get_path("output_dir"), "evaluate.txt"), "a"
+        ) as f:
+            f.write(json.dumps(metrics) + "\n")
+
+        logging.info(metrics)
+
+        return metrics
+    
 
 @registry.register_task("gqa")
 class GQATask(VQATask):

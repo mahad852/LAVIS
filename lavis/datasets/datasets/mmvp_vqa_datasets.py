@@ -29,6 +29,7 @@ class MMVPVQAEvalDataset(VQAEvalDataset, __DisplMixin):
         """
 
         self.vis_root = vis_root
+        self.ann_paths = ann_paths
 
         self.annotation = json.load(open(ann_paths[0]))
 

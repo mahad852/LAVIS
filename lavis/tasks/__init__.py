@@ -14,7 +14,7 @@ from lavis.tasks.multimodal_classification import (
 )
 from lavis.tasks.retrieval import RetrievalTask
 from lavis.tasks.wgv_retrieval import WGVRetrievalTask
-from lavis.tasks.vqa import VQATask, GQATask, AOKVQATask
+from lavis.tasks.vqa import VQATask, GQATask, AOKVQATask, MMVPVQATask
 from lavis.tasks.vqa_reading_comprehension import VQARCTask, GQARCTask
 from lavis.tasks.dialogue import DialogueTask
 
@@ -38,6 +38,7 @@ __all__ = [
     "GQATask",
     "VQARCTask",
     "GQARCTask",
+    "MMVPVQATask",
     "MultimodalClassificationTask",
     # "VideoQATask",
     # "VisualEntailmentTask",
