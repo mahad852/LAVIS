@@ -175,6 +175,15 @@ class VQATask(BaseTask):
     
 @registry.register_task("mmvp_vqa")
 class MMVPVQATask(VQATask):
+    def is_pred_correct(self, pred : str, gts : list):
+        pred = pred.lower().replace('(', '').replace(')', '')
+        gts = [gt.lower().replace('(', '').replace(')', '') for gt in gts]
+
+        if pred != '' and len(pred.split()[0]) == 1:
+            pred = pred.split()[0]
+        
+        return 1 if pred in gts else 0
+
     @dist_utils.main_process
     def _report_metrics(self, result_file, split):
 
@@ -182,19 +191,10 @@ class MMVPVQATask(VQATask):
         acc = []
         gt_answers = [obj["answer"] for obj in json.load(open(get_cache_path("MMVP/Questions.json"), "r"))]
 
-        for i, res in enumerate(results):
-            pred = res["answer"]
-            gts =  gt_answers[i]
-
-            # if self.inference_method == "generate":
-            pred = pred.lower().replace('(', '').replace(')', '')
-            gts = [gt.lower().replace('(', '').replace(')', '') for gt in gts]
-
-            if pred != '' and len(pred.split()[0]) == 1:
-                pred = pred.split()[0]
-            
-            vqa_acc = 1 if pred in gts else 0    
-            acc.append(vqa_acc)
+        for i in range(0, len(results), 2):
+            val_acc1 = self.is_pred_correct(results[i]["answer"], gt_answers[i])
+            val_acc2 = self.is_pred_correct(results[i + 1]["answer"], gt_answers[i + 1])
+            acc.append(1 if val_acc1 + val_acc2 == 2 else 0)
 
         accuracy = sum(acc) / len(acc) * 100
         metrics = {"agg_metrics": accuracy, "acc": accuracy}
