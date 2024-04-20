@@ -24,7 +24,6 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         **args
     ):
         super().__init__(vit_model=vit_model, img_size=img_size, **args)
-        print("load_gvt_weights:", load_gvt_weights)
 
         self.visual_encoder_gvt = self.init_gvt_vision_encoder()
         self.reduction_layer = nn.Linear(1024, self.patch_embed_dim, dtype=torch.float32)
