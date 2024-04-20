@@ -37,6 +37,11 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
             param.requires_grad = False
         self.visual_encoder_gvt = self.visual_encoder_gvt.eval()
         self.visual_encoder_gvt.train = disabled_train
+        
+        self.vision_proj = nn.Linear(self.Qformer.config.hidden_size, 256)
+        self.text_proj = nn.Linear(self.Qformer.config.hidden_size, 256)
+
+        self.itm_head = nn.Linear(self.Qformer.config.hidden_size, 2)
         # self.freeze_all_except_reduction_layer()
 
     def init_gvt_vision_encoder(self):
@@ -173,6 +178,14 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         if os.path.exists("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240417072/checkpoint_best.pth"):
             weights = torch.load("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240417072/checkpoint_best.pth")
             self.load_state_dict(weights['model'], strict=False) 
+        
+        if os.path.exists("lavis/output/BLIP2/coco_finetuned/blip2_finetune_coco.pth"):
+            coco_weights = torch.load("lavis/output/BLIP2/coco_finetuned/blip2_finetune_coco.pth")['model']
+            proj_state_dict = {}
+            for layer, param in coco_weights.items():
+                if 'vision_proj' in layer or 'text_proj' in layer or 'itm_head' in layer:
+                    proj_state_dict[layer] = param
+            self.load_state_dict(proj_state_dict, strict=False)
 
             print("LOADED FINETUED WEIGHTS")
 
@@ -207,6 +220,29 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
             return_dict=True,
         )
         return text_output.last_hidden_state[:, 0, :]
+    
+    def compute_itm(self, image_inputs, text_ids, text_atts):
+        image_atts = torch.ones(image_inputs.size()[:-1], dtype=torch.long).to(
+            image_inputs.device
+        )
+        query_tokens = self.query_tokens.expand(image_inputs.shape[0], -1, -1)
+        query_atts = torch.ones(query_tokens.size()[:-1], dtype=torch.long).to(
+            image_inputs.device
+        )
+        attention_mask = torch.cat([query_atts, text_atts], dim=1)
+        output_itm = self.Qformer.bert(
+            text_ids,
+            query_embeds=query_tokens,
+            attention_mask=attention_mask,
+            encoder_hidden_states=image_inputs,
+            encoder_attention_mask=image_atts,
+            return_dict=True,
+        )
+        vl_embeddings = output_itm.last_hidden_state[:, : query_tokens.size(1), :]
+        itm_logit = self.itm_head(vl_embeddings)
+        itm_logit = itm_logit[:, :, 1].mean(dim=1)
+        return itm_logit
+
 
     @torch.no_grad()
     def generate(
