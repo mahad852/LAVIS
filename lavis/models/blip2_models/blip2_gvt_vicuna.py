@@ -23,6 +23,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         self,
         vit_model="eva_clip_g",
         img_size=224,
+        freeze_vit_gvt=True,
         **args
     ):
         super().__init__(vit_model=vit_model, img_size=img_size, **args)
@@ -33,15 +34,21 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         # for name, parameter in self.reduction_layer.named_parameters():
         #     print("name:", name, "dtype:", parameter.dtype)
 
-        for name, param in self.visual_encoder_gvt.named_parameters():
-            param.requires_grad = False
-        self.visual_encoder_gvt = self.visual_encoder_gvt.eval()
-        self.visual_encoder_gvt.train = disabled_train
+        if freeze_vit_gvt:
+            for _, param in self.visual_encoder_gvt.named_parameters():
+                param.requires_grad = False
+            self.visual_encoder_gvt = self.visual_encoder_gvt.eval()
+            self.visual_encoder_gvt.train = disabled_train
         
         self.vision_proj = nn.Linear(self.Qformer.config.hidden_size, 256)
+        self.vision_proj.requires_grad_(False)
+
         self.text_proj = nn.Linear(self.Qformer.config.hidden_size, 256)
+        self.text_proj.requires_grad_(False)
 
         self.itm_head = nn.Linear(self.Qformer.config.hidden_size, 2)
+        self.itm_head.requires_grad_(False)
+
         # self.freeze_all_except_reduction_layer()
 
     def init_gvt_vision_encoder(self):
@@ -383,6 +390,56 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         output_text = [text.strip() for text in output_text]
 
         return output_text
+    
+    @classmethod
+    def from_config(cls, cfg):
+        vit_model = cfg.get("vit_model", "eva_clip_g")
+        img_size = cfg.get("image_size")
+        num_query_token = cfg.get("num_query_token")
+        llm_model = cfg.get("llm_model")
+
+        drop_path_rate = cfg.get("drop_path_rate", 0)
+        use_grad_checkpoint = cfg.get("use_grad_checkpoint", False)
+        vit_precision = cfg.get("vit_precision", "fp16")
+        freeze_vit = cfg.get("freeze_vit", True)
+
+        prompt = cfg.get("prompt", "")
+        max_txt_len = cfg.get("max_txt_len", 128)
+        max_output_txt_len = cfg.get("max_output_txt_len", 256)
+
+        apply_lemmatizer = cfg.get("apply_lemmatizer", False)
+
+        qformer_text_input = cfg.get("qformer_text_input", True)
+
+        freeze_vit_gvt = cfg.get("freeze_vit_gvt", True)
+
+        model = cls(
+            vit_model=vit_model,
+            img_size=img_size,
+            drop_path_rate=drop_path_rate,
+            use_grad_checkpoint=use_grad_checkpoint,
+            vit_precision=vit_precision,
+            freeze_vit=freeze_vit,
+            num_query_token=num_query_token,
+            llm_model=llm_model,
+            prompt=prompt,
+            max_txt_len=max_txt_len,
+            max_output_txt_len=max_output_txt_len,
+            apply_lemmatizer=apply_lemmatizer,
+            qformer_text_input=qformer_text_input,
+            freeze_vit_gvt=freeze_vit_gvt
+        )
+
+        # if qformer_text_input:
+        #     # Hard-coded to load from BLIP-2 stage-1 pre-trained model (not ideal)
+        #     model.load_from_pretrained(
+        #         url_or_filename="https://storage.googleapis.com/sfr-vision-language-research/LAVIS/models/BLIP2/blip2_pretrained.pth"
+        #     )
+
+        model.load_checkpoint_from_config(cfg)
+
+        return model
+
 
     def predict_answers(
         self,
