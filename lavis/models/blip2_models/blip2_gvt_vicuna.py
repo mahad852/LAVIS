@@ -285,8 +285,6 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         if "ocr_tokens" in samples.keys() and "{}" in prompt[0]:
             prompt = [p.format(', '.join(samples['ocr_tokens'][i][:30])) for i, p in enumerate(prompt)]
 
-        print(prompt)
-
         query_tokens = self.query_tokens.expand(bs, -1, -1)
         if self.qformer_text_input:
             # remove ocr tokens in q_former (for eval textvqa)
