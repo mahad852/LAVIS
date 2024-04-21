@@ -53,6 +53,8 @@ class COCOVQADataset(VQADataset, __DisplMixin):
         answers = list(answer_weight.keys())
         weights = list(answer_weight.values())
 
+        print("answers:", answers)
+
         return {
             "image": image,
             "text_input": question,
