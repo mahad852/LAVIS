@@ -43,7 +43,7 @@ run:
   num_workers: 1
 
   max_len: 60
-  min_len: 20
+  min_len: 8
   num_beams: 5
 
   seed: 42
