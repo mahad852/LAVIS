@@ -88,6 +88,8 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
 
         bs = image.size(0)
 
+        print("samples:", samples)
+
         query_tokens = self.query_tokens.expand(image_embeds.shape[0], -1, -1)
         if self.qformer_text_input:
             text_Qformer = self.tokenizer(
