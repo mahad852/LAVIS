@@ -16,12 +16,16 @@ class VQADataset(BaseDataset):
 
     def collater(self, samples):
         image_list, question_list, answer_list, weight_list = [], [], [], []
+        text_outputs = []
 
         num_answers = []
 
         for sample in samples:
             image_list.append(sample["image"])
             question_list.append(sample["text_input"])
+            
+            if "text_output" in sample:
+                text_outputs.append(sample["text_output"])
 
             weight_list.extend(sample["weights"])
 
@@ -36,6 +40,7 @@ class VQADataset(BaseDataset):
             "answer": answer_list,
             "weight": torch.Tensor(weight_list),
             "n_answers": torch.LongTensor(num_answers),
+            "text_output" : text_outputs
         }
 
 
