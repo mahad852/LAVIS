@@ -89,7 +89,7 @@ class RunnerBase:
             if self.use_distributed:
                 if self._wrapped_model is None:
                     self._wrapped_model = DDP(
-                        self._model, device_ids=[self.config.run_cfg.gpu] #, find_unused_parameters=True
+                        self._model, device_ids=[self.config.run_cfg.gpu], find_unused_parameters=True
                     )
             else:
                 self._wrapped_model = self._model
@@ -469,7 +469,7 @@ class RunnerBase:
         results = self.task.evaluation(model, data_loader)
 
         if results is not None:
-            return self.task.after_evaluation(
+            return self.task.runner_base.py(
                 val_result=results,
                 split_name=split_name,
                 epoch=cur_epoch,
