@@ -33,7 +33,11 @@ datasets:
           name: "blip_image_eval"
           image_size: 224
     text_processor:
+        train:
+          name: "blip_question"
         eval:
+          name: "blip_question"
+        test:
           name: "blip_question"
     # build_info:
     #     images:
@@ -67,6 +71,7 @@ run:
   evaluate: False
   train_splits: ["train"]
   valid_splits: ["val"]
+  test_splits: ["test"]
 
   # distribution-specific
   device: "cuda"
