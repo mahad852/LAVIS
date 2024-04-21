@@ -6,7 +6,7 @@
 model:
   arch: blip2_gvt_vicuna
   model_type: vicuna7b
-  use_grad_checkpoint: True
+  use_grad_checkpoint: False
   freeze_vit: True
   
   load_finetuned: False
