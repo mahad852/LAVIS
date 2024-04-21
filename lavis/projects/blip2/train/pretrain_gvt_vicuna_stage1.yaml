@@ -20,7 +20,7 @@ model:
 
   num_query_token: 32
 
-  prompt: "a photo of "
+  prompt: "Describe the content of this image."
 
 datasets:
   coco_caption_instruct: # name of the dataset builder
@@ -34,7 +34,7 @@ datasets:
     text_processor:
         train:
           name: "blip_caption"
-          prompt: "a photo of "
+          prompt: "Describe the content of this image."
         eval:
           name: "blip_caption"
     # build_info:
@@ -50,7 +50,7 @@ run:
   warmup_lr: 1e-8
   warmup_steps: 1000
   weight_decay: 0.05
-  max_epoch: 5
+  max_epoch: 1
   batch_size_train: 16
   batch_size_eval: 8
   num_workers: 2

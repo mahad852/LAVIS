@@ -6,7 +6,7 @@
 """
 
 import os
-import json
+import random
 
 from PIL import Image
 from PIL import ImageFile
@@ -53,9 +53,12 @@ class COCOCapInstructDataset(CaptionDataset):
         image = self.vis_processor(image)
         caption = self.text_processor(ann["caption"])
 
+        captioning_templates = ["Describe the content of this image.", 
+                                "Generate a caption for this image.",
+                                "Explain what is in this image."]
         return {
             "image": image,
-            "text_input": "a photo of ",
+            "text_input": random.choice(captioning_templates),
             "text_output" : caption,
             "image_id": self.img_ids[ann["image_id"]],
         }
