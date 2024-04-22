@@ -20,8 +20,6 @@ model:
 
   num_query_token: 32
 
-  prompt: "A photo of "
-
 datasets:
   coco_caption_instruct: # name of the dataset builder
     vis_processor:
@@ -37,13 +35,15 @@ datasets:
           prompt: "A photo of "
         eval:
           name: "blip_caption"
-          prompt: "A photo of "
     # build_info:
     #     images:
     #         storage: '/export/share/datasets/vision/coco/images/'
 
 run:
   task: captioning
+
+  prompt: "A photo of "
+
   # optimizer
   lr_sched: "linear_warmup_cosine_lr"
   init_lr: 1e-5
