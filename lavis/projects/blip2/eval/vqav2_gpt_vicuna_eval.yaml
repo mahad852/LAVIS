@@ -53,7 +53,7 @@ run:
   output_dir: "output/BLIP2_GVT/VQA/COCO"
 
   evaluate: True
-  test_splits: ["val"]
+  test_splits: ["test"]
 
   # distribution-specific
   device: "cuda"
