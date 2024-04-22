@@ -40,14 +40,14 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
             self.visual_encoder_gvt = self.visual_encoder_gvt.eval()
             self.visual_encoder_gvt.train = disabled_train
         
-        self.vision_proj = nn.Linear(self.Qformer.config.hidden_size, 256)
-        self.vision_proj.requires_grad_(False)
+        # self.vision_proj = nn.Linear(self.Qformer.config.hidden_size, 256)
+        # self.vision_proj.requires_grad_(False)
 
-        self.text_proj = nn.Linear(self.Qformer.config.hidden_size, 256)
-        self.text_proj.requires_grad_(False)
+        # self.text_proj = nn.Linear(self.Qformer.config.hidden_size, 256)
+        # self.text_proj.requires_grad_(False)
 
-        self.itm_head = nn.Linear(self.Qformer.config.hidden_size, 2)
-        self.itm_head.requires_grad_(False)
+        # self.itm_head = nn.Linear(self.Qformer.config.hidden_size, 2)
+        # self.itm_head.requires_grad_(False)
 
         # self.freeze_all_except_reduction_layer()
 
@@ -182,19 +182,21 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
     def load_from_pretrained(self, url_or_filename):
         super().load_from_pretrained(url_or_filename)
         
-        if os.path.exists("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240422082/checkpoint_best.pth"):
-            weights = torch.load("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240422082/checkpoint_best.pth")
+        if os.path.exists("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240417072/checkpoint_best.pth"):
+            weights = torch.load("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240417072/checkpoint_best.pth")
             self.load_state_dict(weights['model'], strict=False) 
-        
-        if os.path.exists("lavis/output/BLIP2/coco_finetuned/blip2_finetune_coco.pth"):
-            coco_weights = torch.load("lavis/output/BLIP2/coco_finetuned/blip2_finetune_coco.pth")['model']
-            proj_state_dict = {}
-            for layer, param in coco_weights.items():
-                if 'vision_proj' in layer or 'text_proj' in layer or 'itm_head' in layer:
-                    proj_state_dict[layer] = param
-            self.load_state_dict(proj_state_dict, strict=False)
 
             print("LOADED FINETUED WEIGHTS")
+        
+        # if os.path.exists("lavis/output/BLIP2/coco_finetuned/blip2_finetune_coco.pth"):
+        #     coco_weights = torch.load("lavis/output/BLIP2/coco_finetuned/blip2_finetune_coco.pth")['model']
+        #     proj_state_dict = {}
+        #     for layer, param in coco_weights.items():
+        #         if 'vision_proj' in layer or 'text_proj' in layer or 'itm_head' in layer:
+        #             proj_state_dict[layer] = param
+        #     self.load_state_dict(proj_state_dict, strict=False)
+
+        #     print("LOADED FINETUED WEIGHTS")
 
     def compute_sim_matrix(self, data_loader, task_cfg):
         """
