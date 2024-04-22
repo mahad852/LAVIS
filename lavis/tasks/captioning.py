@@ -15,13 +15,14 @@ from lavis.tasks.base_task import BaseTask
 
 @registry.register_task("captioning")
 class CaptionTask(BaseTask):
-    def __init__(self, num_beams, max_len, min_len, evaluate, report_metric=True):
+    def __init__(self, num_beams, max_len, min_len, evaluate, report_metric=True, prompt=""):
         super().__init__()
 
         self.num_beams = num_beams
         self.max_len = max_len
         self.min_len = min_len
         self.evaluate = evaluate
+        self.prompt = prompt
 
         self.report_metric = report_metric
 
@@ -35,6 +36,7 @@ class CaptionTask(BaseTask):
         evaluate = run_cfg.evaluate
 
         report_metric = run_cfg.get("report_metric", True)
+        prompt = run_cfg.get("prompt", "")
 
         return cls(
             num_beams=num_beams,
@@ -42,10 +44,13 @@ class CaptionTask(BaseTask):
             min_len=min_len,
             evaluate=evaluate,
             report_metric=report_metric,
+            prompt=prompt
         )
 
     def valid_step(self, model, samples):
         results = []
+        if self.prompt != "":
+            samples["prompt"] = self.prompt
 
         # run_cfg = slf.cfg.run_cfg
         captions = model.generate(

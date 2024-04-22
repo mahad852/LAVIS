@@ -87,16 +87,12 @@ class BaseTask:
         print_freq = 10
 
         results = []
-        counter = 0
 
         for samples in metric_logger.log_every(data_loader, print_freq, header):
             samples = prepare_sample(samples, cuda_enabled=cuda_enabled)
 
             eval_output = self.valid_step(model=model, samples=samples)
             results.extend(eval_output)
-            counter += 1
-            if counter >= 1000:
-                break
 
         if is_dist_avail_and_initialized():
             dist.barrier()

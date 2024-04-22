@@ -20,7 +20,7 @@ model:
 
   num_query_token: 32
 
-  prompt: "Describe the content of this image."
+  prompt: "A photo of "
 
 datasets:
   coco_caption_instruct: # name of the dataset builder
@@ -34,9 +34,10 @@ datasets:
     text_processor:
         train:
           name: "blip_caption"
-          prompt: "Describe the content of this image."
+          prompt: "A photo of "
         eval:
           name: "blip_caption"
+          prompt: "A photo of "
     # build_info:
     #     images:
     #         storage: '/export/share/datasets/vision/coco/images/'
