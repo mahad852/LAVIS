@@ -70,7 +70,7 @@ run:
   evaluate: False
   train_splits: ["train"]
   valid_splits: ["val"]
-  test_splits: ["test"]
+  # test_splits: ["test"]
 
   # distribution-specific
   device: "cuda"
