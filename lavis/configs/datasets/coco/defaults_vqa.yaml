@@ -26,7 +26,7 @@ datasets:
               - https://storage.googleapis.com/sfr-vision-language-research/LAVIS/datasets/vqav2/v2_OpenEnded_mscoco_val2014_questions.json
               - https://storage.googleapis.com/sfr-vision-language-research/LAVIS/datasets/vqav2/v2_mscoco_val2014_annotations.json
           storage:
-              - coco/annotations/vqa_val_eval_small.json
+              - coco/annotations/vqa_val_eval.json
               - coco/annotations/answer_list.json
               - coco/annotations/v2_OpenEnded_mscoco_val2014_questions.json
               - coco/annotations/v2_mscoco_val2014_annotations.json
