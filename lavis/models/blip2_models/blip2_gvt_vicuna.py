@@ -189,17 +189,13 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         #     self.load_state_dict(weights['model'], strict=False) 
 
         #     print("LOADED FINETUED WEIGHTS")
-        
-        # if os.path.exists("lavis/output/BLIP2/coco_finetuned/blip2_finetune_coco.pth"):
-        #     coco_weights = torch.load("lavis/output/BLIP2/coco_finetuned/blip2_finetune_coco.pth")['model']
-        #     proj_state_dict = {}
-        #     for layer, param in coco_weights.items():
-        #         if 'vision_proj' in layer or 'text_proj' in layer or 'itm_head' in layer:
-        #             proj_state_dict[layer] = param
-        #     self.load_state_dict(proj_state_dict, strict=False)
 
-        #     print("LOADED FINETUED WEIGHTS")
+        if os.path.exists("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240422214/checkpoint_best.pth"):
+            weights = torch.load("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240422214/checkpoint_best.pth")
+            self.load_state_dict(weights['model'], strict=False) 
 
+            print("LOADED FINETUED WEIGHTS")
+   
     def freeze_all_except_qformer_and_reduction(self):
         for name, param in self.named_parameters():
             if "reduction_layer" in name or "Qformer" in name:
