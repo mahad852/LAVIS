@@ -189,16 +189,17 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         #     self.load_state_dict(weights['model'], strict=False) 
 
         #     print("LOADED FINETUED WEIGHTS")
+        #     ---------------------------
+    
+        # if os.path.exists("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240422214/checkpoint_best.pth"):
+        #     weights = torch.load("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240422214/checkpoint_best.pth")
+        #     self.load_state_dict(weights['model'], strict=False) 
 
-        if os.path.exists("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240422214/checkpoint_best.pth"):
-            weights = torch.load("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240422214/checkpoint_best.pth")
-            self.load_state_dict(weights['model'], strict=False) 
-
-            print("LOADED FINETUED WEIGHTS")
+        #     print("LOADED FINETUED WEIGHTS")
    
     def freeze_all_except_qformer_and_reduction(self):
         for name, param in self.named_parameters():
-            if "reduction_layer" in name or "Qformer" in name:
+            if "reduction_layer" in name: # or "Qformer" in name:
                 continue
             param.requires_grad = False
 
