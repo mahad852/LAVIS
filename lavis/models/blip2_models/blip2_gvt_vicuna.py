@@ -201,7 +201,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         #     print("LOADED FINETUED WEIGHTS")
 
     def freeze_all_except_qformer_and_reduction(self):
-        for name, param in self.parameters():
+        for name, param in self.named_parameters():
             if "reduction_layer" in name or "Qformer" in name:
                 continue
             param.requires_grad = False
