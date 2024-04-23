@@ -98,7 +98,7 @@ class BaseTask:
 
             counter += 1
 
-            if counter >= 1000:
+            if counter >= 200:
                 break
 
         if is_dist_avail_and_initialized():
