@@ -185,10 +185,11 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         super().load_from_pretrained(url_or_filename)
         
         
-        weights = torch.load("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240423100/checkpoint_0.pth")
+        # weights = torch.load("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240423100/checkpoint_0.pth")
+        weights = torch.load("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240423100/checkpoint_best.pth")
         self.load_state_dict(weights['model'], strict=False) 
         print("LOADED FINETUED WEIGHTS")
-        
+
         #     ---------------------------
     
         # if os.path.exists("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240422214/checkpoint_best.pth"):
