@@ -40,6 +40,8 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
             self.visual_encoder_gvt = self.visual_encoder_gvt.eval()
             self.visual_encoder_gvt.train = disabled_train
         
+        self.freeze_all_except_qformer_and_reduction()
+        
         # self.vision_proj = nn.Linear(self.Qformer.config.hidden_size, 256)
         # self.vision_proj.requires_grad_(False)
 
@@ -197,6 +199,12 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
         #     self.load_state_dict(proj_state_dict, strict=False)
 
         #     print("LOADED FINETUED WEIGHTS")
+
+    def freeze_all_except_qformer_and_reduction(self):
+        for name, param in self.parameters():
+            if "reduction_layer" in name or "Qformer" in name:
+                continue
+            param.requires_grad = False
 
     def compute_sim_matrix(self, data_loader, task_cfg):
         """
