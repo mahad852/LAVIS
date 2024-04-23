@@ -340,6 +340,7 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
             inputs_llm = torch.cat(inputs_llm, dim=1)
             atts_llm = torch.cat(atts_llm, dim=1)
         else:
+            print("generator called. using reduction layer to map gvt output to q_former")
             with self.maybe_autocast():
                 image_embeds = self.ln_vision(self.reduction_layer(self.visual_encoder_gvt.forward_features(image, return_all_features=True))).to(torch.float32)
             image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
