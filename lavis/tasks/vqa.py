@@ -178,9 +178,6 @@ class MMVPVQATask(VQATask):
     def is_pred_correct(self, pred : str, gts : list):
         pred = pred.lower().replace('(', '').replace(')', '')
         gts = [gt.lower().replace('(', '').replace(')', '') for gt in gts]
-
-        if pred != '' and len(pred.split()[0]) == 1:
-            pred = pred.split()[0]
         
         return 1 if pred in gts else 0
 

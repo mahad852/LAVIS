@@ -184,11 +184,11 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
     def load_from_pretrained(self, url_or_filename):
         super().load_from_pretrained(url_or_filename)
         
-        # if os.path.exists("lavis/output/BLIP2_GVT/VQA/COCO_Train/20240422165/checkpoint_best.pth"):
-        #     weights = torch.load("lavis/output/BLIP2_GVT/VQA/COCO_Train/20240422165/checkpoint_best.pth")
-        #     self.load_state_dict(weights['model'], strict=False) 
-
-        #     print("LOADED FINETUED WEIGHTS")
+        
+        weights = torch.load("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240423100/checkpoint_0.pth")
+        self.load_state_dict(weights['model'], strict=False) 
+        print("LOADED FINETUED WEIGHTS")
+        
         #     ---------------------------
     
         # if os.path.exists("lavis/output/BLIP2_GVT/Pretrain_stage1_vicuna/20240422214/checkpoint_best.pth"):
@@ -340,7 +340,6 @@ class Blip2GVTVicuna(Blip2VicunaInstruct):
             inputs_llm = torch.cat(inputs_llm, dim=1)
             atts_llm = torch.cat(atts_llm, dim=1)
         else:
-            print("generator called. using reduction layer to map gvt output to q_former")
             with self.maybe_autocast():
                 image_embeds = self.ln_vision(self.reduction_layer(self.visual_encoder_gvt.forward_features(image, return_all_features=True))).to(torch.float32)
             image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)

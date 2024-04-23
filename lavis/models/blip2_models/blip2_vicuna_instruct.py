@@ -1,4 +1,12 @@
 """
+ Copyright (c) 2022, salesforce.com, inc.
+ All rights reserved.
+ SPDX-License-Identifier: BSD-3-Clause
+ For full license text, see the LICENSE file in the repo root or https://opensource.org/licenses/BSD-3-Clause
+"""
+
+
+"""
 Requires Transformer 4.28 and above, implementation may change according the Llama implementation
 """
 import logging
@@ -143,8 +151,6 @@ class Blip2VicunaInstruct(Blip2Base):
         # print('-----------------')
 
         image = samples["image"]
-        image.requires_grad = True
-
         with self.maybe_autocast():
             image_embeds = self.ln_vision(self.visual_encoder(image))
         image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
@@ -160,11 +166,9 @@ class Blip2VicunaInstruct(Blip2Base):
                 max_length=self.max_txt_len,
                 return_tensors="pt",
             ).to(image.device)
-            text_Qformer.requires_grad = True
             query_atts = torch.ones(query_tokens.size()[:-1], dtype=torch.long).to(image.device)
             Qformer_atts = torch.cat([query_atts, text_Qformer.attention_mask],dim=1)
             
-            print(query_tokens.dtype, Qformer_atts.dtype, text_Qformer.input_ids.dtype, image_embeds.dtype, image_atts.dtype)
             query_output = self.Qformer.bert(
                 text_Qformer.input_ids,
                 attention_mask=Qformer_atts,
@@ -328,7 +332,6 @@ class Blip2VicunaInstruct(Blip2Base):
             image_atts = torch.ones(image_embeds.size()[:-1], dtype=torch.long).to(image.device)
 
             if self.qformer_text_input:
-                print(query_tokens.dtype, Qformer_atts.dtype, text_Qformer.input_ids.dtype, image_embeds.dtype, image_atts.dtype)
                 query_output = self.Qformer.bert(
                     text_Qformer.input_ids,
                     attention_mask=Qformer_atts,
