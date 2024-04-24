@@ -100,6 +100,8 @@ def main():
         if param.device == "cpu":
             print(f"parameter:{name} running on cpu")
 
+    num_params = sum([np.prod(p.size()) for p in model.parameters()])
+    print("Total parameters:", num_params)
 
 if __name__ == "__main__":
     main()
