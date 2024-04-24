@@ -101,7 +101,9 @@ def main():
             print(f"parameter:{name} running on cpu")
 
     num_params = sum([np.prod(p.size()) for p in model.parameters()])
-    print("Total parameters:", num_params)
+    num_vision_encoder_params = sum([np.prod(p.size()) for p in model.visual_encoder.parameters()])
+
+    print("Total parameters:", num_params - num_vision_encoder_params)
 
 if __name__ == "__main__":
     main()
